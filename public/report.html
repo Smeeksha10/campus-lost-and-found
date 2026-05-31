@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Report Item - Findora</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #b08968;
+            --bg: #f8f5f2;
+            --card: #ffffff;
+            --text-main: #2c2c2c;
+            --text-muted: #8a817c;
+            --border: #ddd;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg);
+            color: var(--text-main);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 50px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 2px;
+        }
+
+        .links {
+            display: flex;
+            gap: 14px;
+        }
+
+        .links a {
+            text-decoration: none;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 10px 20px;
+            border-radius: 999px;
+            font-weight: 500;
+        }
+
+        .links a.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px 80px;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 640px;
+            background: var(--card);
+            border-radius: 24px;
+            padding: 36px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+
+        .card h1 {
+            margin: 0 0 10px;
+            font-size: 26px;
+        }
+
+        .card p {
+            margin: 0 0 28px;
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: 'Poppins', sans-serif;
+            background: white;
+        }
+
+        button {
+            width: fit-content;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 14px 22px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        #message {
+            margin-top: 16px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="nav">
+        <div class="logo">🔎 Findora</div>
+        <div class="links">
+            <a href="index.html">Home</a>
+            <a href="search.html">Inventory</a>
+            <a href="report.html" class="active">Report</a>
+        </div>
+    </nav>
+
+    <div class="wrapper">
+        <div class="card">
+            <h1>Report an Item 📢</h1>
+            <p>Help others find their belongings</p>
+
+            <form id="reportForm" enctype="multipart/form-data">
+                <input type="text" name="name" placeholder="Item name" required>
+                <input type="text" name="location" placeholder="Location" required>
+                <input type="email" name="email" placeholder="Your Email" required>
+                <input type="date" name="date" required>
+                <input type="file" name="image" accept="image/*">
+
+                <select name="type" required>
+    <option value="lost">I Lost This</option>
+    <option value="found">I Found This</option>
+</select>
+
+                <button type="submit">Submit Item</button>
+            </form>
+
+            <div id="message"></div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById("reportForm");
+        const message = document.getElementById("message");
+
+        form.addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(form);
+
+            try {
+                const res = await fetch("/api/report", {
+                    method: "POST",
+                    body: formData
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    message.textContent = "Item submitted successfully!";
+                    message.style.color = "green";
+                    form.reset();
+                } else {
+                    message.textContent = data.error || "Failed to submit item.";
+                    message.style.color = "red";
+                }
+            } catch (err) {
+                console.error(err);
+                message.textContent = "Something went wrong.";
+                message.style.color = "red";
+            }
+        });
+    </script>
+
+</body>
+</html>

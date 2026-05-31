@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Account - Findora</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+:root {
+    --primary: #b08968;
+    --bg: #f8f5f2;
+    --card: #ffffff;
+    --text-main: #2c2c2c;
+    --text-muted: #8a817c;
+}
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg);
+}
+
+/* NAVBAR */
+.nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 50px;
+}
+
+.logo {
+    font-size: 1.4rem;
+    letter-spacing: 3px;
+}
+
+.links a {
+    margin-left: 15px;
+    text-decoration: none;
+    color: var(--primary);
+    font-weight: 500;
+    padding: 6px 14px;
+    border: 1px solid var(--primary);
+    border-radius: 20px;
+}
+
+.links a:hover {
+    background: var(--primary);
+    color: white;
+}
+
+/* CARD */
+.account-card {
+    max-width: 500px;
+    margin: 80px auto;
+    background: var(--card);
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+
+.account-card h2 {
+    margin-bottom: 20px;
+}
+
+.info {
+    margin: 10px 0;
+    font-size: 16px;
+    color: var(--text-muted);
+}
+
+.logout-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+    </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="nav">
+    <div class="logo">🔍 Findora</div>
+    <div class="links">
+        <a href="index.html">Home</a>
+        <a href="dashboard.html">Inventory</a>
+        <a href="report.html">Report</a>
+    </div>
+</nav>
+
+<!-- ACCOUNT CARD -->
+<div class="account-card">
+    <h2>My Account 👤</h2>
+
+    <p class="info"><strong>Username:</strong> <span id="username"></span></p>
+    <p class="info"><strong>Email:</strong> <span id="email"></span></p>
+    <h3 style="margin-top:30px;">My Reported Items</h3>
+    <div id="myItems"></div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+</div>
+
+<script>
+    async function loadMyItems() {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    const res = await fetch('/api/items');
+    const items = await res.json();
+
+    const myItems = items.filter(item => item.email === user.email);
+
+    const container = document.getElementById("myItems");
+
+    if (myItems.length === 0) {
+        container.innerHTML = "<p>No items reported yet.</p>";
+        return;
+    }
+
+    container.innerHTML = myItems.map(item => `
+        <div style="margin:10px; padding:10px; border:1px solid #ddd; border-radius:10px;">
+            <strong>${item.name}</strong> - ${item.location}
+            <br>
+            <small>${item.type.toUpperCase()}</small>
+        </div>
+    `).join('');
+}
+
+loadMyItems();
+
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (!user) {
+        alert("Please login first!");
+        window.location.href = "login.html";
+    } else {
+        document.getElementById("username").textContent = user.username || "N/A";
+        document.getElementById("email").textContent = user.email || "N/A";
+    }
+
+    function logout() {
+        localStorage.removeItem("user");
+        window.location.href = "index.html";
+    }
+</script>
+
+</body>
+</html>

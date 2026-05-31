@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Findora - Lost & Found</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+:root {
+    --primary: #b08968;
+    --bg: #f8f5f2;
+    --text-main: #2c2c2c;
+    --text-muted: #8a817c;
+}
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #f8f5f2;
+}
+/* NAVBAR */
+.nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 50px;
+    background: #f8f5f2;
+}
+
+.logo {
+    font-size: 1.4rem;
+    letter-spacing: 3px;
+}
+
+.links a {
+    margin-left: 20px;
+    text-decoration: none;
+    color: var(--text-muted);
+}
+
+.links a:hover {
+    color: var(--primary);
+}
+
+/* HERO */
+.hero {
+    position: relative;
+}
+
+.hero img {
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+    filter: brightness(60%);
+}
+
+.hero-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    text-align: center;
+}
+
+.hero-text h1 {
+    font-size: 3rem;
+    font-weight: 300;
+}
+
+.hero-text p {
+    margin-top: 10px;
+    font-size: 1rem;
+    color: rgba(255,255,255,0.9);
+}
+
+/* BUTTON */
+.btn {
+    margin-top: 20px;
+    padding: 12px 25px;
+    border: 1px solid white;
+    color: white;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    background: white;
+    color: black;
+}
+
+/* SECTION */
+.section {
+    padding: 60px;
+    text-align: center;
+}
+
+.cards {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+.card {
+    width: 250px;
+}
+
+.card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 15px;
+}
+
+.card p {
+    margin-top: 10px;
+    color: var(--text-muted);
+}
+
+/* FOOTER */
+.footer {
+    background: #2c2c2c;
+    color: white;
+    padding: 30px;
+    text-align: center;
+    margin-top: 50px;
+}
+
+.links a {
+    margin-left: 18px;
+    text-decoration: none;
+    color: #b08968;
+    font-weight: 500;
+    letter-spacing: 1px;
+    padding: 8px 16px;
+    border: 1px solid #b08968;
+    border-radius: 20px;
+    transition: 0.3s;
+}
+
+.links a:hover {
+    background: #b08968;
+    color: white;
+}
+
+/* ⭐ Active page style */
+.links a.active {
+    background: #b08968;
+    color: white;
+}
+
+.links a {
+    font-size: 14px;
+}
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="nav">
+    <div class="logo">🔍 Findora</div>
+    <div class="links" id="navLinks">
+        <a href="dashboard.html">Inventory</a>
+        <a href="report.html">Report</a>
+        <a href="account.html">My Account</a>
+        <a href="login.html">Login</a>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200">
+
+    <div class="hero-text">
+        <h1>Find What You Lost</h1>
+        <h1>Return What You Found</h1>
+        <p>Find what you’ve lost, effortlessly.</p>
+        <a href="dashboard.html" class="btn">Browse Items</a>
+    </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<div class="section">
+    <h2>How It Works</h2>
+
+    <div class="cards">
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1517842645767-c639042777db?w=800">
+            <p>Report your lost item easily</p>
+        </div>
+
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800">
+            <p>Browse found items</p>
+        </div>
+
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=800">
+            <p>Get matched instantly</p>
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <h3>🔍 Findora</h3>
+    <p>Reconnect with what matters.</p>
+    <p>© 2026 Findora | Campus Lost & Found</p>
+</footer>
+<script>
+    const user = JSON.parse(localStorage.getItem("user"));
+    const navLinks = document.getElementById("navLinks");
+
+    if (user) {
+        navLinks.innerHTML = `
+            <a href="dashboard.html">Inventory</a>
+            <a href="report.html">Report</a>
+            <a href="account.html">My Account</a>
+            <a href="#" onclick="logout()">Logout</a>
+        `;
+    }
+
+    function logout() {
+        localStorage.removeItem("user");
+        window.location.href = "index.html";
+    }
+</script>
+</body>
+</html>

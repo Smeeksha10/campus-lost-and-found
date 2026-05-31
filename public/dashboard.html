@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Inventory</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+:root {
+    --primary: #b08968;
+    --bg: #f8f5f2;
+    --card: #ffffff;
+    --text-main: #2c2c2c;
+    --text-muted: #8a817c;
+}
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #f8f5f2;
+}
+
+/* NAVBAR */
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 60px;
+}
+
+.logo {
+    letter-spacing: 3px;
+}
+
+.links a {
+    margin-left: 25px;
+    text-decoration: none;
+    color: var(--text-muted);
+}
+
+.links a:hover {
+    color: var(--primary);
+}
+
+/* SEARCH */
+.search-box {
+    text-align: center;
+    margin: 20px;
+}
+
+.search-box input {
+    padding: 12px;
+    width: 300px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+}
+
+/* GRID */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 320px));
+    gap: 25px;
+    padding: 40px;
+    justify-content: center;
+}
+
+/* CARD */
+.card {
+    background: var(--card);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    transition: 0.3s;
+    width: 100%;
+    max-width: 320px;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.card-content {
+    padding: 15px;
+}
+
+.card-content h3 {
+    margin: 0;
+}
+
+.card-content p {
+    color: var(--text-muted);
+}
+
+/* BADGE */
+.badge {
+    display: inline-block;
+    margin-top: 5px;
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+}
+
+.lost {
+    background: #ffe5e5;
+    color: #d00000;
+}
+
+.found {
+    background: #e6f7ed;
+    color: #2d6a4f;
+}
+
+.links {
+    display: flex;
+    align-items: center;
+}
+
+.links a {
+    margin-left: 12px;
+    text-decoration: none;
+    color: #b08968;
+    font-weight: 500;
+    font-size: 13px;   /* 👈 reduce size */
+    padding: 6px 14px; /* 👈 smaller buttons */
+    border: 1px solid #b08968;
+    border-radius: 20px;
+    transition: 0.3s;
+}
+
+.links a:hover {
+    background: #b08968;
+    color: white;
+}
+
+.links a.active {
+    background: #b08968;
+    color: white;
+}
+    </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="nav">
+    <div class="logo">🔍 Findora</div>
+    <div class="links">
+        <a href="index.html">HOME</a>
+        <a href="dashboard.html" class="active">INVENTORY</a>
+        <a href="report.html">REPORT</a>
+    </div>
+</nav>
+
+<!-- SEARCH -->
+<div class="search-box">
+    <input 
+        type="text" 
+        id="searchInput" 
+        placeholder="Search by name or location..."
+        onkeyup="loadItems()"
+    >
+
+    <input 
+        type="date" 
+        id="dateInput" 
+        onchange="loadItems()"
+        style="margin-left: 10px;"
+    >
+</div>
+
+<!-- GRID -->
+<div class="grid" id="itemsGrid"></div>
+
+<script>
+    async function loadItems() {
+    const search = document.getElementById('searchInput').value.trim();
+    const date = document.getElementById('dateInput').value;
+
+    let url = '/api/items';
+    const params = [];
+
+    if (search) params.push(`search=${encodeURIComponent(search)}`);
+    if (date) params.push(`date=${encodeURIComponent(date)}`);
+
+    if (params.length > 0) {
+        url += '?' + params.join('&');
+    }
+
+    const res = await fetch(url);
+    const items = await res.json();
+
+    const grid = document.getElementById('itemsGrid');
+
+    grid.innerHTML = items.map(item => `
+        <div class="card">
+            ${item.image 
+                ? `<img src="${item.image}" alt="${item.name}">`
+                : `<img src="https://via.placeholder.com/300x180?text=No+Image" alt="No Image">`
+            }
+
+            <div class="card-content">
+                <h3>${item.name}</h3>
+                <p>📍 ${item.location}</p>
+                <p>📅 ${item.date || 'N/A'}</p>
+                <p>📧 ${item.email ? `<a href="mailto:${item.email}">${item.email}</a>` : 'Not provided'}</p>
+                <p>Status: ${item.status || 'Available'}</p>
+                <span class="badge ${item.type}">
+                    ${item.type.toUpperCase()}
+                </span>
+            </div>
+        </div>
+    `).join('');
+}
+    
+    // ✅ MUST BE OUTSIDE FUNCTION
+    window.onload = loadItems;
+    </script>
+
+</body>
+</html>
